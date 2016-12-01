@@ -18,13 +18,13 @@ Below is an illustration of how you can use binary line navigation to reach
 character `e` at column 10 from character `b` at column 34 in four steps:
 
                      +----------------+       backward-half
-		     |
+                     |
             +--------+                        backward-half
-	    |
+            |
             +---+                             forward-half
-	        |	    				      
+                |
               +-+                             backward-half
-	      |
+              |
     ..........e.......................b.....
 
 This approach requires at most log(N) invocations to move from any position to
