@@ -1,10 +1,11 @@
-;;; bln-mode.el --- package providing binary line navigation minor-mode -*- lexical-binding: t; -*-
+;;; bln-mode.el --- binary line navigation minor-mode
+
 
 ;; Copyright (C) 2016  Maarten Grachten
 
 ;;; Author: Maarten Grachten
 ;;; Keywords: lisp
-;;; Version: 1.0
+;;; Version: 1.0.0
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -55,6 +56,7 @@
 ;; and M-], respectively.
 
 ;;; Code:
+(setq lexical-binding t)
 
 (let ((beg -1)
       (end -1)
