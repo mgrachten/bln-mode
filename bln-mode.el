@@ -19,6 +19,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
+;;
 ;; Navigating the cursor across long lines of text by keyboard in Emacs can be
 ;; cumbersome, since commands like `forward-char', `backward-char',
 ;; `forward-word', and `backward-word' move sequentially, and potentially
@@ -61,26 +63,22 @@
 ;; (global-set-key (kbd "M-j") 'bln-backward-half)
 ;; (global-set-key (kbd "M-k") 'bln-forward-half)
 
-
-;;; Commentary:
-;; 
-
 ;;; Code:
 
-(setq beg -1
-      end -1
-      prev-mid -1)
+(defvar bln-beg -1)
+(defvar bln-end -1)
+(defvar bln-prev-mid -1)
 
 ;;;###autoload
 (defun bln-backward-half ()
   "This function is used in combination with `bln-forward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
   (if (/= prev-mid (point))
-      (setq beg -1 end -1)
-    (setq end prev-mid))
-  (if (< beg 0) (setq beg (line-beginning-position)
-		      end (point)))
-  (setq prev-mid (/ (+ beg end) 2))
+      (setq bln-beg -1 bln-end -1)
+    (setq bln-end prev-mid))
+  (if (< bln-beg 0) (setq bln-beg (line-beginning-position)
+			  bln-end (point)))
+  (setq prev-mid (/ (+ bln-beg bln-end) 2))
   (goto-char prev-mid))
 
 ;;;###autoload
@@ -88,11 +86,11 @@
   "This function is used in combination with `bln-backward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
   (if (/= prev-mid (point))
-      (setq beg -1 end -1)
-    (setq beg prev-mid))
-  (if (< end 0) (setq beg (point)
-		      end (line-end-position)))
-  (setq prev-mid (/ (+ beg end ) 2))
+      (setq bln-beg -1 bln-end -1)
+    (setq bln-beg prev-mid))
+  (if (< bln-end 0) (setq bln-beg (point)
+			  bln-end (line-end-position)))
+  (setq prev-mid (/ (+ bln-beg bln-end ) 2))
   (goto-char prev-mid))
 
 
