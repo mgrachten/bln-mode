@@ -147,8 +147,6 @@ navigation again from that cursor position.
 By default the commands `backward-half' and `forward-half' are
 bound to M-[ and M-], respectively.
 "
-  
-  :init-value 1
   :lighter " bln"
   :global
   :keymap bln-mode-map
