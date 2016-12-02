@@ -1,5 +1,4 @@
-;;; bln-mode.el --- binary line navigation minor-mode
-
+;;; bln-mode.el --- binary line navigation minor mode
 
 ;; Copyright (C) 2016  Maarten Grachten
 
@@ -53,41 +52,49 @@
 ;; from that cursor position.
 
 ;; By default the commands `backward-half' and `forward-half' are bound to M-[
-;; and M-], respectively.
+;; and M-], respectively. Depending on your keyboard layout, these keys may not
+;; be very convenient. For more convenient binary line navigation, you could
+;; bind to more convenient keys, like M-j and M-k (at the expense of losing the
+;; default bindings for `indent-new-comment-line', and `kill-sentence',
+;; respectively):
+;;
+;; (global-set-key (kbd "M-j") 'backward-half)
+;; (global-set-key (kbd "M-k") 'forward-half)
+
+
+;;; Commentary:
+;; 
 
 ;;; Code:
-(setq lexical-binding t)
 
-(let ((beg -1)
-      (end -1)
-      (prev-mid -1))
-  
-  (defun backward-half ()
-    "This function is used in combination with `forward-half' to
-provide binary line navigation (see `bln-mode')"
-    (interactive)
-    (if (/= prev-mid (point)) 
-	(setq beg -1 end -1)
-      (setq end prev-mid))
-    (if (< beg 0) (setq beg (line-beginning-position)
-			end (point)))
-    (setq prev-mid (/ (+ beg end) 2))
-    (goto-char prev-mid))
-  
-  (defun forward-half ()
-    "This function is used in combination with `backward-half' to
-provide binary line navigation (see `bln-mode')"
-    (interactive)
-    (if (/= prev-mid (point))
-	(setq beg -1 end -1)
-      (setq beg prev-mid))
-    (if (< end 0) (setq beg (point)
-			end (line-end-position)))
-    (setq prev-mid (/ (+ beg end ) 2))
-    (goto-char prev-mid))
-  )
+(setq beg -1
+      end -1
+      prev-mid -1)
 
-(defvar bln-mode-map (make-sparse-keymap) "bln-mode keymap")
+(defun backward-half ()
+  "This function is used in combination with `forward-half' to provide binary line navigation (see `bln-mode')."
+  (interactive)
+  (if (/= prev-mid (point))
+      (setq beg -1 end -1)
+    (setq end prev-mid))
+  (if (< beg 0) (setq beg (line-beginning-position)
+		      end (point)))
+  (setq prev-mid (/ (+ beg end) 2))
+  (goto-char prev-mid))
+
+(defun forward-half ()
+  "This function is used in combination with `backward-half' to provide binary line navigation (see `bln-mode')."
+  (interactive)
+  (if (/= prev-mid (point))
+      (setq beg -1 end -1)
+    (setq beg prev-mid))
+  (if (< end 0) (setq beg (point)
+		      end (line-end-position)))
+  (setq prev-mid (/ (+ beg end ) 2))
+  (goto-char prev-mid))
+
+
+(defvar bln-mode-map (make-sparse-keymap) "Keymap for bln-mode.")
 (define-key bln-mode-map (kbd "M-]") 'forward-half)
 (define-key bln-mode-map (kbd "M-[") 'backward-half)
 
@@ -137,6 +144,8 @@ navigation again from that cursor position.
 By default the commands `backward-half' and `forward-half' are
 bound to M-[ and M-], respectively.
 "
+  
+  :init-value 1
   :lighter " bln"
   :global
   :keymap bln-mode-map
