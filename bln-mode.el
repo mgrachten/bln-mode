@@ -24,42 +24,42 @@
 ;; `forward-word', and `backward-word' move sequentially, and potentially
 ;; require a lot of repeated executions to arrive at the desired position. This
 ;; package provides the binary line navigation minor-mode (`bln-mode'), to
-;; address this issue. It defines the commands `forward-half' and
-;; `backward-half', which allow for navigating from any position in a line to
+;; address this issue. It defines the commands `bln-forward-half' and
+;; `bln-backward-half', which allow for navigating from any position in a line to
 ;; any other position in that line by recursive binary subdivision.
 
-;; For instance, if the cursor is at position K, invoking `backward-half' will
-;; move the cursor to position K/2. Successively invoking `forward-half'
+;; For instance, if the cursor is at position K, invoking `bln-backward-half' will
+;; move the cursor to position K/2. Successively invoking `bln-forward-half'
 ;; (without moving the cursor in between invocations) will move the cursor to
-;; K/2 + K/4, whereas a second invocation of `backward-half' would move the
+;; K/2 + K/4, whereas a second invocation of `bln-backward-half' would move the
 ;; cursor to K/2 - K/4.
 
 ;; Below is an illustration of how you can use binary line navigation to reach
 ;; character `e' at column 10 from character `b' at column 34 in four steps:
 ;;
-;;                   ________________|     `backward-half'
-;;          ________|                      `backward-half'
-;;         |___                            `forward-half'
-;;            _|                           `backward-half'
+;;                   ________________|     `bln-backward-half'
+;;          ________|                      `bln-backward-half'
+;;         |___                            `bln-forward-half'
+;;            _|                           `bln-backward-half'
 ;; ..........e.......................b.....
 ;;
 ;; This approach requires at most log(N) invocations to move from any position
 ;; to any other position in a line of N characters. Note that when you move in
-;; the wrong direction---by mistakenly invoking `backward-half' instead of
-;; `forward-half' or vice versa---you can interrupt the current binary
+;; the wrong direction---by mistakenly invoking `bln-backward-half' instead of
+;; `bln-forward-half' or vice versa---you can interrupt the current binary
 ;; navigation sequence by moving the cursor away from its current position (for
 ;; example, by `forward-char'). You can then start the binary navigation again
 ;; from that cursor position.
 
-;; By default the commands `backward-half' and `forward-half' are bound to M-[
+;; By default the commands `bln-backward-half' and `bln-forward-half' are bound to M-[
 ;; and M-], respectively. Depending on your keyboard layout, these keys may not
 ;; be very convenient. For more convenient binary line navigation, you could
 ;; bind to more convenient keys, like M-j and M-k (at the expense of losing the
 ;; default bindings for `indent-new-comment-line', and `kill-sentence',
 ;; respectively):
 ;;
-;; (global-set-key (kbd "M-j") 'backward-half)
-;; (global-set-key (kbd "M-k") 'forward-half)
+;; (global-set-key (kbd "M-j") 'bln-backward-half)
+;; (global-set-key (kbd "M-k") 'bln-forward-half)
 
 
 ;;; Commentary:
@@ -72,8 +72,8 @@
       prev-mid -1)
 
 ;;;###autoload
-(defun backward-half ()
-  "This function is used in combination with `forward-half' to provide binary line navigation (see `bln-mode')."
+(defun bln-backward-half ()
+  "This function is used in combination with `bln-forward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
   (if (/= prev-mid (point))
       (setq beg -1 end -1)
@@ -84,8 +84,8 @@
   (goto-char prev-mid))
 
 ;;;###autoload
-(defun forward-half ()
-  "This function is used in combination with `backward-half' to provide binary line navigation (see `bln-mode')."
+(defun bln-forward-half ()
+  "This function is used in combination with `bln-backward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
   (if (/= prev-mid (point))
       (setq beg -1 end -1)
@@ -97,8 +97,8 @@
 
 
 (defvar bln-mode-map (make-sparse-keymap) "Keymap for bln-mode.")
-(define-key bln-mode-map (kbd "M-]") 'forward-half)
-(define-key bln-mode-map (kbd "M-[") 'backward-half)
+(define-key bln-mode-map (kbd "M-]") 'bln-forward-half)
+(define-key bln-mode-map (kbd "M-[") 'bln-backward-half)
 
 ;;;###autoload
 (define-minor-mode bln-mode
@@ -114,37 +114,37 @@ Emacs can be cumbersome, since commands like `forward-char',
 `backward-char', `forward-word', and `backward-word' move the
 cursor linearly, and potentially require a lot of repeated
 executions to arrive at the desired position. `bln-mode'
-addresses this issue. It defines the commands `forward-half' and
-`backward-half' that allow for navigating from any position in a
+addresses this issue. It defines the commands `bln-forward-half' and
+`bln-backward-half' that allow for navigating from any position in a
 line to any other position in that line by recursive binary
 subdivision.
 
 For instance, if the cursor is at position K, invoking
-`backward-half' will move the cursor to position
-K/2. Successively invoking `forward-half' will move the cursor to
-K/2 + K/4, whereas a second invocation of `backward-half' would
+`bln-backward-half' will move the cursor to position
+K/2. Successively invoking `bln-forward-half' will move the cursor to
+K/2 + K/4, whereas a second invocation of `bln-backward-half' would
 move the cursor to K/2 - K/4.
 
 Below is an illustration of how you can use binary line navigation
 to reach character `e' at column 10 from character `b' at column
 34 in four steps:
 
-                  ________________|     `backward-half'
-         ________|                      `backward-half'
-        |___                            `forward-half'
-           _|                           `backward-half'
+                  ________________|     `bln-backward-half'
+         ________|                      `bln-backward-half'
+        |___                            `bln-forward-half'
+           _|                           `bln-backward-half'
 ..........e.......................b.....
 
 This approach requires at most log(N) invocations to move from
 any position to any other position in a line of N
 characters. Note that when you move in the wrong direction---by
-mistakenly invoking `backward-half' instead of `forward-half' or
+mistakenly invoking `bln-backward-half' instead of `bln-forward-half' or
 vice versa---you can interrupt the current binary navigation
 sequence by moving the cursor away from its current position (for
 example, by `forward-char'). You can then start the binary
 navigation again from that cursor position.
 
-By default the commands `backward-half' and `forward-half' are
+By default the commands `bln-backward-half' and `bln-forward-half' are
 bound to M-[ and M-], respectively.
 "
   :lighter " bln"
