@@ -152,4 +152,5 @@ bound to M-[ and M-], respectively.
   :group 'bln
   )
 
+(provide 'bln-mode)
 ;;; bln-mode.el ends here
