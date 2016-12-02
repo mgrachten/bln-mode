@@ -71,6 +71,7 @@
       end -1
       prev-mid -1)
 
+;;;###autoload
 (defun backward-half ()
   "This function is used in combination with `forward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
@@ -82,6 +83,7 @@
   (setq prev-mid (/ (+ beg end) 2))
   (goto-char prev-mid))
 
+;;;###autoload
 (defun forward-half ()
   "This function is used in combination with `backward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
@@ -98,6 +100,7 @@
 (define-key bln-mode-map (kbd "M-]") 'forward-half)
 (define-key bln-mode-map (kbd "M-[") 'backward-half)
 
+;;;###autoload
 (define-minor-mode bln-mode
   "Toggle binary line navigation mode.
 
