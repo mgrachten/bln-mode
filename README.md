@@ -50,11 +50,11 @@ Download the HEAD of repository and install with:
 
 # Keybindings
 
-By default the commands `backward-half' and `forward-half' are bound to M-[
+By default the commands `backward-half` and `forward-half` are bound to M-[
 and M-], respectively. Depending on your keyboard layout, these keys may not
 be very convenient. For more convenient binary line navigation, you could
 bind to more convenient keys, like M-j and M-k (at the expense of losing the
-default bindings for `indent-new-comment-line', and `kill-sentence',
+default bindings for `indent-new-comment-line`, and `kill-sentence`,
 respectively):
 
     (global-set-key (kbd "M-j") 'backward-half)
