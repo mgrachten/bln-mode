@@ -1,5 +1,6 @@
-# bln-mode
-Minor mode for binary line navigation in Emacs
+# `bln-mode`: Minor mode for binary line navigation in Emacs
+
+# Introduction and Usage
 
 Navigating the cursor across long lines of text by keyboard in Emacs can be
 cumbersome, since commands like `forward-char`, `backward-char`, `forward-word`,
@@ -35,5 +36,26 @@ sequence by moving the cursor away from its current position (for example, by
 `forward-char`). You can then start the binary navigation again from that cursor
 position.
 
-By default the commands `backward-half` and `forward-half` are bound to `M-[`
-and `M-]`, respectively.
+# Installation
+
+## Install the ELPA package from MELPA
+
+    M-x package-install bln-mode
+
+## Download and install with package.el manually
+
+Download the HEAD of repository and install with:
+
+    M-x package-install-file.
+
+# Keybindings
+
+By default the commands `backward-half' and `forward-half' are bound to M-[
+and M-], respectively. Depending on your keyboard layout, these keys may not
+be very convenient. For more convenient binary line navigation, you could
+bind to more convenient keys, like M-j and M-k (at the expense of losing the
+default bindings for `indent-new-comment-line', and `kill-sentence',
+respectively):
+
+    (global-set-key (kbd "M-j") 'backward-half)
+    (global-set-key (kbd "M-k") 'forward-half)
