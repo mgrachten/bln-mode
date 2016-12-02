@@ -24,9 +24,9 @@
 ;; Navigating the cursor across long lines of text by keyboard in Emacs can be
 ;; cumbersome, since commands like `forward-char', `backward-char',
 ;; `forward-word', and `backward-word' move sequentially, and potentially
-;; require a lot of repeated executions to arrive at the desired position. This
+;; require a lot of repeated executions to arrive at the desired position.  This
 ;; package provides the binary line navigation minor-mode (`bln-mode'), to
-;; address this issue. It defines the commands `bln-forward-half' and
+;; address this issue.  It defines the commands `bln-forward-half' and
 ;; `bln-backward-half', which allow for navigating from any position in a line to
 ;; any other position in that line by recursive binary subdivision.
 
@@ -46,7 +46,7 @@
 ;; ..........e.......................b.....
 ;;
 ;; This approach requires at most log(N) invocations to move from any position
-;; to any other position in a line of N characters. Note that when you move in
+;; to any other position in a line of N characters.  Note that when you move in
 ;; the wrong direction---by mistakenly invoking `bln-backward-half' instead of
 ;; `bln-forward-half' or vice versa---you can interrupt the current binary
 ;; navigation sequence by moving the cursor away from its current position (for
@@ -54,8 +54,8 @@
 ;; from that cursor position.
 
 ;; By default the commands `bln-backward-half' and `bln-forward-half' are bound to M-[
-;; and M-], respectively. Depending on your keyboard layout, these keys may not
-;; be very convenient. For more convenient binary line navigation, you could
+;; and M-], respectively.  Depending on your keyboard layout, these keys may not
+;; be very convenient.  For more convenient binary line navigation, you could
 ;; bind to more convenient keys, like M-j and M-k (at the expense of losing the
 ;; default bindings for `indent-new-comment-line', and `kill-sentence',
 ;; respectively):
@@ -73,25 +73,25 @@
 (defun bln-backward-half ()
   "This function is used in combination with `bln-forward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
-  (if (/= prev-mid (point))
+  (if (/= bln-prev-mid (point))
       (setq bln-beg -1 bln-end -1)
-    (setq bln-end prev-mid))
+    (setq bln-end bln-prev-mid))
   (if (< bln-beg 0) (setq bln-beg (line-beginning-position)
 			  bln-end (point)))
-  (setq prev-mid (/ (+ bln-beg bln-end) 2))
-  (goto-char prev-mid))
+  (setq bln-prev-mid (/ (+ bln-beg bln-end) 2))
+  (goto-char bln-prev-mid))
 
 ;;;###autoload
 (defun bln-forward-half ()
   "This function is used in combination with `bln-backward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
-  (if (/= prev-mid (point))
+  (if (/= bln-prev-mid (point))
       (setq bln-beg -1 bln-end -1)
-    (setq bln-beg prev-mid))
+    (setq bln-beg bln-prev-mid))
   (if (< bln-end 0) (setq bln-beg (point)
 			  bln-end (line-end-position)))
-  (setq prev-mid (/ (+ bln-beg bln-end ) 2))
-  (goto-char prev-mid))
+  (setq bln-prev-mid (/ (+ bln-beg bln-end ) 2))
+  (goto-char bln-prev-mid))
 
 
 (defvar bln-mode-map (make-sparse-keymap) "Keymap for bln-mode.")
