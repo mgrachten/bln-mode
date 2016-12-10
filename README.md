@@ -38,6 +38,10 @@ position.
 
 # Installation
 
+## Install the ELPA package from MELPA
+
+    M-x package-install bln-mode
+ 
 ## Download and install with package.el manually
 
 Download the HEAD of repository and install with:

@@ -3,7 +3,8 @@
 ;; Copyright (C) 2016  Maarten Grachten
 
 ;;; Author: Maarten Grachten
-;;; Keywords: lisp
+;;; Keywords: motion, location, cursor, convenience
+;;; URL: https://github.com/mgrachten/bln-mode
 ;;; Version: 1.0.0
 
 ;; This program is free software; you can redistribute it and/or modify
