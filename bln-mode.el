@@ -1,4 +1,4 @@
-;;; bln-mode.el --- binary line navigation minor mode
+;;; bln-mode.el --- binary line navigation minor mode for cursor movement in long lines
 
 ;; Copyright (C) 2016  Maarten Grachten
 
