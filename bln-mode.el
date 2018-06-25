@@ -66,32 +66,33 @@
 
 ;;; Code:
 
-(defvar bln-beg -1)
-(defvar bln-end -1)
+(defvar bln-beg-end '(-1 . -1))
 (defvar bln-prev-mid -1)
 
 ;;;###autoload
 (defun bln-backward-half ()
   "This function is used in combination with `bln-forward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
-  (if (/= bln-prev-mid (point))
-      (setq bln-beg -1 bln-end -1)
-    (setq bln-end bln-prev-mid))
-  (if (< bln-beg 0) (setq bln-beg (line-beginning-position)
-			  bln-end (point)))
-  (setq bln-prev-mid (/ (+ bln-beg bln-end) 2))
+  (setq bln-beg-end
+        (if (/= bln-prev-mid (point))
+            '(-1 . -1)
+          `(,(car bln-beg-end) . ,bln-prev-mid)))
+  (when (< (car bln-beg-end) 0) (setq bln-beg-end
+                                      `(,(line-beginning-position) . ,(point))))
+  (setq bln-prev-mid (/ (+ (car bln-beg-end) (cdr bln-beg-end)) 2))
   (goto-char bln-prev-mid))
 
 ;;;###autoload
 (defun bln-forward-half ()
   "This function is used in combination with `bln-backward-half' to provide binary line navigation (see `bln-mode')."
   (interactive)
-  (if (/= bln-prev-mid (point))
-      (setq bln-beg -1 bln-end -1)
-    (setq bln-beg bln-prev-mid))
-  (if (< bln-end 0) (setq bln-beg (point)
-			  bln-end (line-end-position)))
-  (setq bln-prev-mid (/ (+ bln-beg bln-end ) 2))
+  (setq bln-beg-end
+        (if (/= bln-prev-mid (point))
+            '(-1 . -1)
+          `(,bln-prev-mid . ,(cdr bln-beg-end))))
+  (when (< (cdr bln-beg-end) 0) (setq bln-beg-end
+                                      `(,(point) . ,(line-end-position))))
+  (setq bln-prev-mid (/ (+ (car bln-beg-end) (cdr bln-beg-end)) 2))
   (goto-char bln-prev-mid))
 
 
