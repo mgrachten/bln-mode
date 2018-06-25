@@ -75,10 +75,8 @@
   (interactive)
   (setq bln-beg-end
         (if (/= bln-prev-mid (point))
-            '(-1 . -1)
+            `(,(line-beginning-position) . ,(point))
           `(,(car bln-beg-end) . ,bln-prev-mid)))
-  (when (< (car bln-beg-end) 0) (setq bln-beg-end
-                                      `(,(line-beginning-position) . ,(point))))
   (setq bln-prev-mid (/ (+ (car bln-beg-end) (cdr bln-beg-end)) 2))
   (goto-char bln-prev-mid))
 
@@ -88,10 +86,8 @@
   (interactive)
   (setq bln-beg-end
         (if (/= bln-prev-mid (point))
-            '(-1 . -1)
+            `(,(point) . ,(line-end-position))
           `(,bln-prev-mid . ,(cdr bln-beg-end))))
-  (when (< (cdr bln-beg-end) 0) (setq bln-beg-end
-                                      `(,(point) . ,(line-end-position))))
   (setq bln-prev-mid (/ (+ (car bln-beg-end) (cdr bln-beg-end)) 2))
   (goto-char bln-prev-mid))
 
