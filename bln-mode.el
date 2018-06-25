@@ -69,6 +69,10 @@
 (defvar bln-beg-end '(-1 . -1))
 (defvar bln-functions-list '(bln-backward-half
                              bln-forward-half))
+(defvar bln-beg-end-v '(-1 . -1))
+(defvar bln-functions-list-v '(bln-backward-half-v
+                               bln-forward-half-v))
+(defvar bln-column-v -1)
 
 ;;;###autoload
 (defun bln-backward-half ()
@@ -90,6 +94,36 @@
             `(,(point) . ,(cdr bln-beg-end))
           `(,(point) . ,(line-end-position))))
   (goto-char (/ (+ (car bln-beg-end) (cdr bln-beg-end)) 2)))
+
+;;;###autoload
+(defun bln-backward-half-v ()
+  "This function is used in combination with `bln-forward-half' to provide binary line navigation (see `bln-mode')."
+  (interactive)
+  (if (member last-command bln-functions-list-v)
+      (setq bln-beg-end-v
+            `(,(car bln-beg-end-v) . ,(line-number-at-pos (point))))
+    (setq bln-beg-end-v
+          `(,(line-number-at-pos (window-start)) . ,(line-number-at-pos (point)))
+          bln-column-v (- (point) (line-beginning-position))))
+  (forward-line (/ (- (car bln-beg-end-v) (cdr bln-beg-end-v)) 2))
+  (if (< bln-column-v (- (line-end-position) (line-beginning-position)))
+      (forward-char bln-column-v)
+    (move-end-of-line 1)))
+
+;;;###autoload
+(defun bln-forward-half-v ()
+  "This function is used in combination with `bln-backward-half' to provide binary line navigation (see `bln-mode')."
+  (interactive)
+  (if (member last-command bln-functions-list-v)
+      (setq bln-beg-end-v
+            `(,(line-number-at-pos (point)) . ,(cdr bln-beg-end-v)))
+    (setq bln-beg-end-v
+          `(,(line-number-at-pos (point)) . ,(line-number-at-pos (window-end)))
+          bln-column-v (- (point) (line-beginning-position))))
+  (forward-line (/ (- (cdr bln-beg-end-v) (car bln-beg-end-v)) 2))
+  (if (< bln-column-v (- (line-end-position) (line-beginning-position)))
+      (forward-char bln-column-v)
+    (move-end-of-line 1)))
 
 
 (defvar bln-mode-map (make-sparse-keymap) "Keymap for bln-mode.")
