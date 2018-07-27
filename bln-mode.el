@@ -80,8 +80,8 @@
   (interactive)
   (setq bln-beg-end
         (if (member last-command bln-functions-list)
-            `(,(car bln-beg-end) . ,(point))
-          `(,(line-beginning-position) . ,(point))))
+            (cons (car bln-beg-end) (point))
+          (cons (line-beginning-position) (point))))
   (goto-char (/ (+ (car bln-beg-end) (cdr bln-beg-end)) 2)))
 
 ;;;###autoload
@@ -91,8 +91,8 @@
   (setq bln-beg-end
         (if (member last-command bln-functions-list)
             ;; (/= (point) bln-prev-point))
-            `(,(point) . ,(cdr bln-beg-end))
-          `(,(point) . ,(line-end-position))))
+            (cons (point) (cdr bln-beg-end))
+          (cons (point) (1+ (line-end-position)))))
   (goto-char (/ (+ (car bln-beg-end) (cdr bln-beg-end)) 2)))
 
 ;;;###autoload
@@ -101,9 +101,9 @@
   (interactive)
   (if (member last-command bln-functions-list-v)
       (setq bln-beg-end-v
-            `(,(car bln-beg-end-v) . ,(line-number-at-pos (point))))
+            (cons (car bln-beg-end-v) (line-number-at-pos (point))))
     (setq bln-beg-end-v
-          `(,(line-number-at-pos (window-start)) . ,(line-number-at-pos (point)))
+          (cons (line-number-at-pos (window-start)) (line-number-at-pos (point)))
           bln-column-v (- (point) (line-beginning-position))))
   (forward-line (/ (- (car bln-beg-end-v) (cdr bln-beg-end-v)) 2))
   (if (< bln-column-v (- (line-end-position) (line-beginning-position)))
@@ -116,9 +116,9 @@
   (interactive)
   (if (member last-command bln-functions-list-v)
       (setq bln-beg-end-v
-            `(,(line-number-at-pos (point)) . ,(cdr bln-beg-end-v)))
+            (cons (line-number-at-pos (point)) (cdr bln-beg-end-v)))
     (setq bln-beg-end-v
-          `(,(line-number-at-pos (point)) . ,(line-number-at-pos (window-end)))
+          (cons (line-number-at-pos (point)) (line-number-at-pos (window-end)))
           bln-column-v (- (point) (line-beginning-position))))
   (forward-line (/ (- (cdr bln-beg-end-v) (car bln-beg-end-v)) 2))
   (if (< bln-column-v (- (line-end-position) (line-beginning-position)))
