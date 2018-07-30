@@ -51,12 +51,29 @@ Download the HEAD of repository and install with:
 
 # Keybindings
 
-By default the commands `bln-backward-half` and `bln-forward-half` are bound to M-[
-and M-], respectively. Depending on your keyboard layout, these keys may not
-be very convenient. For more convenient binary line navigation, you could
-bind to more convenient keys, like M-j and M-k (at the expense of losing the
-default bindings for `indent-new-comment-line`, and `kill-sentence`,
-respectively):
+The default keybindings are as follows:
 
-    (global-set-key (kbd "M-j") 'bln-backward-half)
-    (global-set-key (kbd "M-k") 'bln-forward-half)
+| Command               | Key       |
+| --------------------- | --------- |
+| `bln-backward-half`   | *C-c . j* | 
+| `bln-forward-half`    | *C-c . k* | 
+| `bln-backward-half-v` | *C-c , j* | 
+| `bln-forward-half-v`  | *C-c , k* | 
+
+
+Navigation using thse keybindings is rather cumbersome
+however. Using the `hydra` package, the following bindings
+provide a much more convenient interface:
+
+```lisp
+(defhydra hydra-bln ()
+  "Binary line navigation mode"
+  ("j" bln-backward-half "Backward in line")
+  ("k" bln-forward-half "Forward in line")
+  ("u" bln-backward-half-v "Backward in window")
+  ("i" bln-forward-half-v "Forward in window"))
+(define-key bln-mode-map (kbd "M-j") ’hydra-bln/body)
+```
+
+In this setup you press *M-j* to start the navigation, an press any sequence of
+*j*, *k*, *u*, *i* to navigate. Any other key will terminate the navigation.
