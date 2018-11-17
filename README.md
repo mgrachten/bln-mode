@@ -59,7 +59,8 @@ The default keybindings are as follows:
 | `bln-forward-half`    | *C-c . k* | 
 | `bln-backward-half-v` | *C-c , j* | 
 | `bln-forward-half-v`  | *C-c , k* | 
-
+| `bln-backward-half-b` | *C-c . h* | 
+| `bln-forward-half-b`  | *C-c . l* | 
 
 Navigation using thse keybindings is rather cumbersome
 however. Using the `hydra` package, the following bindings
@@ -71,9 +72,12 @@ provide a much more convenient interface:
   ("j" bln-backward-half "Backward in line")
   ("k" bln-forward-half "Forward in line")
   ("u" bln-backward-half-v "Backward in window")
-  ("i" bln-forward-half-v "Forward in window"))
+  ("i" bln-forward-half-v "Forward in window")
+  ("h" bln-backward-half-b "Backward in buffer")
+  ("l" bln-forward-half-b "Forward in buffer"))
 (define-key bln-mode-map (kbd "M-j") ’hydra-bln/body)
 ```
 
-In this setup you press *M-j* to start the navigation, an press any sequence of
-*j*, *k*, *u*, *i* to navigate. Any other key will terminate the navigation.
+In this setup you press *M-j* to start the navigation, and press any
+sequence of *j*, *k*, *u*, *i*, *h*, *l* to navigate. Any other key
+will terminate the navigation.

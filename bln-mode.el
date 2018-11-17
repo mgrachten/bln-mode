@@ -87,6 +87,11 @@
                                bln-forward-half-v))
 (defvar bln-column-v -1)
 
+(defvar bln-beg-end-b '(-1 . -1))
+(defvar bln-functions-list-b '(bln-backward-half-b
+                               bln-forward-half-b))
+(defvar bln-column-b -1)
+
 ;;;###autoload
 (defun bln-backward-half ()
   "This function is used in combination with `bln-forward-half' to provide binary line navigation (see `bln-mode')."
@@ -138,12 +143,43 @@
       (forward-char bln-column-v)
     (move-end-of-line 1)))
 
+;;;###autoload
+(defun bln-backward-half-b ()
+  "This function is used in combination with `bln-forward-half-b' to provide binary line navigation in the buffer (see `bln-mode')."
+  (interactive)
+  (if (member last-command bln-functions-list-b)
+      (setq bln-beg-end-b
+            (cons (car bln-beg-end-b) (line-number-at-pos (point))))
+    (setq bln-beg-end-b
+          (cons (line-number-at-pos (point-min)) (line-number-at-pos (point)))
+          bln-column-b (- (point) (line-beginning-position))))
+  (forward-line (/ (- (car bln-beg-end-b) (cdr bln-beg-end-b)) 2))
+  (if (< bln-column-b (- (line-end-position) (line-beginning-position)))
+      (forward-char bln-column-b)
+    (move-end-of-line 1)))
+
+;;;###autoload
+(defun bln-forward-half-b ()
+  "This function is used in combination with `bln-backward-half-b' to provide binary line navigation in the buffer (see `bln-mode')."
+  (interactive)
+  (if (member last-command bln-functions-list-b)
+      (setq bln-beg-end-b
+            (cons (line-number-at-pos (point)) (cdr bln-beg-end-b)))
+    (setq bln-beg-end-b
+          (cons (line-number-at-pos (point)) (line-number-at-pos (point-max)))
+          bln-column-b (- (point) (line-beginning-position))))
+  (forward-line (/ (- (cdr bln-beg-end-b) (car bln-beg-end-b)) 2))
+  (if (< bln-column-b (- (line-end-position) (line-beginning-position)))
+      (forward-char bln-column-b)
+    (move-end-of-line 1)))
 
 (defvar bln-mode-map (make-sparse-keymap) "Keymap for bln-mode.")
 (define-key bln-mode-map (kbd "C-c . j") 'bln-backward-half)
 (define-key bln-mode-map (kbd "C-c . k") 'bln-forward-half)
 (define-key bln-mode-map (kbd "C-c , j") 'bln-backward-half-v)
 (define-key bln-mode-map (kbd "C-c , k") 'bln-forward-half-v)
+(define-key bln-mode-map (kbd "C-c . h") 'bln-backward-half-b)
+(define-key bln-mode-map (kbd "C-c . l") 'bln-forward-half-b)
 
 ;;;###autoload
 (define-minor-mode bln-mode
@@ -193,12 +229,17 @@ In an analogous manner, `bln-mode` allows for vertical binary
 navigation across the visible lines in the window, using the
 `bln-backward-half-v` and `bln-forward-half-v` commands.
 
+Similarly, vertical binary navigation across the entire buffer is
+possible using the `bln-backward-half-b' and `bln-forward-half-b' commands.
+
 The default keybindings are as follows:
 
 * `bln-backward-half`   (\\[bln-backward-half])
 * `bln-forward-half`    (\\[bln-forward-half])
 * `bln-backward-half-v` (\\[bln-backward-half-v])
 * `bln-forward-half-v`  (\\[bln-forward-half-v])
+* `bln-backward-half-b` (\\[bln-backward-half-b])
+* `bln-forward-half-b`  (\\[bln-forward-half-b])
 
 Navigation using thse keybindings is rather cumbersome
 however. Using the `hydra` package, the following bindings
@@ -209,7 +250,9 @@ provide a much more convenient interface:
       (\"j\" bln-backward-half \"Backward in line\")
       (\"k\" bln-forward-half \"Forward in line\")
       (\"u\" bln-backward-half-v \"Backward in window\")
-      (\"i\" bln-forward-half-v \"Forward in window\"))
+      (\"i\" bln-forward-half-v \"Forward in window\")
+      (\"h\" bln-backward-half-b \"Backward in buffer\")
+      (\"l\" bln-forward-half-b \"Forward in buffer\"))
     (define-key bln-mode-map (kbd \"M-j\") 'hydra-bln/body)
 "
   :lighter " bln"
